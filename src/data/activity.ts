@@ -1,0 +1,111 @@
+import type { ActivityItem } from "@/types";
+
+export const activityFeed: ActivityItem[] = [
+  {
+    id: "act-001",
+    type: "payment_received",
+    message: "Payment of $18,500 received from Crestline Energy",
+    timestamp: "2026-03-19T10:30:00Z",
+    user: "System",
+  },
+  {
+    id: "act-002",
+    type: "task_completed",
+    message: "Fixed payment retry logic for failed transactions",
+    timestamp: "2026-03-19T09:45:00Z",
+    user: "Sarah Chen",
+  },
+  {
+    id: "act-003",
+    type: "account_created",
+    message: "New trial account: Skyline Properties",
+    timestamp: "2026-03-19T09:15:00Z",
+    user: "Emily Park",
+  },
+  {
+    id: "act-004",
+    type: "subscription_changed",
+    message: "Meridian Technologies upgraded to Enterprise tier",
+    timestamp: "2026-03-19T08:30:00Z",
+    user: "System",
+  },
+  {
+    id: "act-005",
+    type: "invoice_sent",
+    message: "Invoice #inv-005 sent to Pinnacle Health Group",
+    timestamp: "2026-03-19T08:00:00Z",
+    user: "System",
+  },
+  {
+    id: "act-006",
+    type: "user_login",
+    message: "James Rodriguez logged in from new device",
+    timestamp: "2026-03-18T17:20:00Z",
+    user: "James Rodriguez",
+  },
+  {
+    id: "act-007",
+    type: "alert",
+    message: "Invoice #inv-010 for Vertex Solutions is overdue",
+    timestamp: "2026-03-18T16:00:00Z",
+    user: "System",
+  },
+  {
+    id: "act-008",
+    type: "task_completed",
+    message: "Set up monitoring alerts for API latency",
+    timestamp: "2026-03-18T14:30:00Z",
+    user: "James Rodriguez",
+  },
+  {
+    id: "act-009",
+    type: "payment_received",
+    message: "Payment of $15,000 received from NovaBridge Software",
+    timestamp: "2026-03-18T12:00:00Z",
+    user: "System",
+  },
+  {
+    id: "act-010",
+    type: "account_created",
+    message: "New trial account: Coastal Ventures",
+    timestamp: "2026-03-18T10:15:00Z",
+    user: "Emily Park",
+  },
+  {
+    id: "act-011",
+    type: "subscription_changed",
+    message: "Summit Retail Co paused their subscription",
+    timestamp: "2026-03-17T15:30:00Z",
+    user: "System",
+  },
+  {
+    id: "act-012",
+    type: "alert",
+    message: "Payment failed for Lumen Creative — card declined",
+    timestamp: "2026-03-17T11:45:00Z",
+    user: "System",
+  },
+  {
+    id: "act-013",
+    type: "task_completed",
+    message: "Prepared demo environment for Quantum Finance",
+    timestamp: "2026-03-16T16:00:00Z",
+    user: "James Rodriguez",
+  },
+  {
+    id: "act-014",
+    type: "payment_received",
+    message: "Payment of $8,900 received from Sterling Legal Partners",
+    timestamp: "2026-03-16T09:30:00Z",
+    user: "System",
+  },
+  {
+    id: "act-015",
+    type: "invoice_sent",
+    message: "March invoices sent to 14 accounts",
+    timestamp: "2026-03-15T08:00:00Z",
+    user: "System",
+  },
+];
+
+export const alerts = activityFeed.filter((item) => item.type === "alert");
