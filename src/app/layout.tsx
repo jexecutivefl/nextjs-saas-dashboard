@@ -1,0 +1,20 @@
+import type { Metadata } from "next";
+import "./globals.css";
+
+export const metadata: Metadata = {
+  title: "SaaSBoard — Business Operations Dashboard",
+  description:
+    "Modern SaaS dashboard for managing accounts, workflows, billing, and business intelligence.",
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
+}
