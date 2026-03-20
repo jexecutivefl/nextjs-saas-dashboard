@@ -5,6 +5,7 @@ import { GrowthBarChart } from "@/components/charts/bar-chart";
 import { ActivityFeed } from "@/components/dashboard/activity-feed";
 import { AlertsPanel } from "@/components/dashboard/alerts-panel";
 import { QuickActions } from "@/components/dashboard/quick-actions";
+import { AIInsightsPanel } from "@/components/dashboard/ai-insights";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { kpiData, revenueChartData, growthChartData } from "@/data/dashboard";
 import { activityFeed, alerts } from "@/data/activity";
@@ -24,32 +25,38 @@ export default function DashboardPage() {
           label={kpiData.totalRevenue.label}
           value={formatCurrencyCompact(kpiData.totalRevenue.value)}
           change={kpiData.totalRevenue.change}
+          index={0}
         />
         <KPICard
           label={kpiData.activeAccounts.label}
           value={kpiData.activeAccounts.value.toString()}
           change={kpiData.activeAccounts.change}
+          index={1}
         />
         <KPICard
           label={kpiData.taskCompletion.label}
           value={`${kpiData.taskCompletion.value}%`}
           change={kpiData.taskCompletion.change}
+          index={2}
         />
         <KPICard
           label={kpiData.customerSatisfaction.label}
           value={`${kpiData.customerSatisfaction.value}%`}
           change={kpiData.customerSatisfaction.change}
+          index={3}
         />
         <KPICard
           label={kpiData.newTrials.label}
           value={kpiData.newTrials.value.toString()}
           change={kpiData.newTrials.change}
+          index={4}
         />
         <KPICard
           label={kpiData.churnRate.label}
           value={`${kpiData.churnRate.value}%`}
           change={kpiData.churnRate.change}
           invertTrend
+          index={5}
         />
       </div>
 
@@ -88,6 +95,11 @@ export default function DashboardPage() {
             <GrowthBarChart data={growthChartData} />
           </CardContent>
         </Card>
+      </div>
+
+      {/* AI Insights */}
+      <div className="mt-6">
+        <AIInsightsPanel />
       </div>
 
       {/* Bottom Row */}

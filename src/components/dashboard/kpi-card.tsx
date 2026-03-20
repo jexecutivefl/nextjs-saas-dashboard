@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { TrendUpIcon, TrendDownIcon } from "@/components/layout/icons";
 import { cn } from "@/lib/utils";
@@ -8,14 +10,20 @@ interface KPICardProps {
   change: number;
   format?: "currency" | "percent" | "number";
   invertTrend?: boolean;
+  index?: number;
 }
 
-export function KPICard({ label, value, change, invertTrend = false }: KPICardProps) {
+export function KPICard({ label, value, change, invertTrend = false, index = 0 }: KPICardProps) {
   const isPositive = invertTrend ? change <= 0 : change >= 0;
 
   return (
     <Card hover>
-      <CardContent className="py-5">
+      <CardContent
+        className="py-5"
+        style={{
+          animation: `staggerFadeIn 0.4s ease-out ${index * 80}ms both`,
+        }}
+      >
         <p className="text-sm font-medium text-content-secondary">{label}</p>
         <div className="mt-2 flex items-end justify-between">
           <p className="text-2xl font-semibold tracking-tight text-content">

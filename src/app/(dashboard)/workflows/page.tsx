@@ -2,12 +2,14 @@
 
 import { useState, useMemo } from "react";
 import { PageHeader } from "@/components/layout/page-header";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Modal } from "@/components/ui/modal";
 import { SearchInput } from "@/components/tables/search-input";
-import { tasks, workflowSummary } from "@/data/tasks";
+import { CreateTaskForm } from "@/components/forms/create-task-form";
+import { tasks as initialTasks, workflowSummary } from "@/data/tasks";
 import { formatDate, cn } from "@/lib/utils";
 import { TASK_STATUS_COLORS, PRIORITY_COLORS } from "@/config/constants";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -23,12 +25,14 @@ const statusFilters: { value: TaskStatus | "all"; label: string }[] = [
 ];
 
 export default function WorkflowsPage() {
+  const [tasksList, setTasksList] = useState<Task[]>(initialTasks);
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState<TaskStatus | "all">("all");
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const debouncedSearch = useDebounce(search, 250);
 
   const filteredTasks = useMemo(() => {
-    return tasks.filter((task) => {
+    return tasksList.filter((task) => {
       const matchesSearch =
         !debouncedSearch ||
         task.title.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
@@ -39,14 +43,23 @@ export default function WorkflowsPage() {
 
       return matchesSearch && matchesStatus;
     });
-  }, [debouncedSearch, activeFilter]);
+  }, [tasksList, debouncedSearch, activeFilter]);
+
+  const handleCreateTask = (task: Task) => {
+    setTasksList((prev) => [task, ...prev]);
+    setShowCreateModal(false);
+  };
 
   return (
     <div>
       <PageHeader
         title="Workflows"
         description="Track tasks, priorities, and team progress"
-        actions={<Button size="sm">Create Task</Button>}
+        actions={
+          <Button size="sm" onClick={() => setShowCreateModal(true)}>
+            Create Task
+          </Button>
+        }
       />
 
       {/* Health Summary */}
@@ -98,6 +111,19 @@ export default function WorkflowsPage() {
           <p className="text-sm text-content-secondary">No tasks match your filters</p>
         </div>
       )}
+
+      {/* Create Task Modal */}
+      <Modal
+        open={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        title="Create New Task"
+        description="Add a task to your workflow"
+      >
+        <CreateTaskForm
+          onSubmit={handleCreateTask}
+          onCancel={() => setShowCreateModal(false)}
+        />
+      </Modal>
     </div>
   );
 }

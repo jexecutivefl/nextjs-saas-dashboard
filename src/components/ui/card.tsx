@@ -37,11 +37,13 @@ export function CardHeader({
 export function CardContent({
   children,
   className,
+  style,
 }: {
   children: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
 }) {
-  return <div className={cn("px-6 py-4", className)}>{children}</div>;
+  return <div className={cn("px-6 py-4", className)} style={style}>{children}</div>;
 }
 
 export function CardFooter({
