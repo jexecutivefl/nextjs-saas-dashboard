@@ -6,10 +6,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Modal } from "@/components/ui/modal";
 import { DataTable } from "@/components/tables/data-table";
 import { SearchInput } from "@/components/tables/search-input";
 import { AccountDetail } from "@/components/dashboard/account-detail";
-import { accounts } from "@/data/accounts";
+import { AddAccountForm } from "@/components/forms/add-account-form";
+import { accounts as initialAccounts } from "@/data/accounts";
 import { formatCurrency, formatRelativeDate } from "@/lib/utils";
 import { STATUS_COLORS, TIER_LABELS, TIER_COLORS } from "@/config/constants";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -31,15 +33,17 @@ const tierOptions = [
 ];
 
 export default function AccountsPage() {
+  const [accountsList, setAccountsList] = useState<Account[]>(initialAccounts);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [tierFilter, setTierFilter] = useState("all");
   const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   const debouncedSearch = useDebounce(search, 250);
 
   const filteredAccounts = useMemo(() => {
-    return accounts.filter((account) => {
+    return accountsList.filter((account) => {
       const matchesSearch =
         !debouncedSearch ||
         account.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
@@ -54,7 +58,12 @@ export default function AccountsPage() {
 
       return matchesSearch && matchesStatus && matchesTier;
     });
-  }, [debouncedSearch, statusFilter, tierFilter]);
+  }, [accountsList, debouncedSearch, statusFilter, tierFilter]);
+
+  const handleAddAccount = (account: Account) => {
+    setAccountsList((prev) => [account, ...prev]);
+    setShowAddModal(false);
+  };
 
   const columns = [
     {
@@ -99,7 +108,7 @@ export default function AccountsPage() {
       label: "MRR",
       render: (account: Account) => (
         <span className="text-sm font-medium text-content">
-          {account.mrr > 0 ? formatCurrency(account.mrr) : "—"}
+          {account.mrr > 0 ? formatCurrency(account.mrr) : "\u2014"}
         </span>
       ),
     },
@@ -128,26 +137,30 @@ export default function AccountsPage() {
       <PageHeader
         title="Accounts"
         description="Manage your customer accounts and subscriptions"
-        actions={<Button size="sm">Add Account</Button>}
+        actions={
+          <Button size="sm" onClick={() => setShowAddModal(true)}>
+            Add Account
+          </Button>
+        }
       />
 
       {/* Summary Cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
-        <SummaryCard label="Total Accounts" value={accounts.length.toString()} />
+        <SummaryCard label="Total Accounts" value={accountsList.length.toString()} />
         <SummaryCard
           label="Active"
-          value={accounts.filter((a) => a.status === "active").length.toString()}
+          value={accountsList.filter((a) => a.status === "active").length.toString()}
         />
         <SummaryCard
           label="Total MRR"
-          value={formatCurrency(accounts.reduce((sum, a) => sum + a.mrr, 0))}
+          value={formatCurrency(accountsList.reduce((sum, a) => sum + a.mrr, 0))}
         />
         <SummaryCard
           label="Avg. Revenue"
           value={formatCurrency(
             Math.round(
-              accounts.filter((a) => a.mrr > 0).reduce((sum, a) => sum + a.mrr, 0) /
-                accounts.filter((a) => a.mrr > 0).length
+              accountsList.filter((a) => a.mrr > 0).reduce((sum, a) => sum + a.mrr, 0) /
+                (accountsList.filter((a) => a.mrr > 0).length || 1)
             )
           )}
         />
@@ -199,7 +212,7 @@ export default function AccountsPage() {
         />
         <div className="border-t border-surface-border px-4 py-3">
           <p className="text-xs text-content-tertiary">
-            Showing {filteredAccounts.length} of {accounts.length} accounts
+            Showing {filteredAccounts.length} of {accountsList.length} accounts
           </p>
         </div>
       </Card>
@@ -217,6 +230,19 @@ export default function AccountsPage() {
           />
         </>
       )}
+
+      {/* Add Account Modal */}
+      <Modal
+        open={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        title="Add New Account"
+        description="Create a new customer account"
+      >
+        <AddAccountForm
+          onSubmit={handleAddAccount}
+          onCancel={() => setShowAddModal(false)}
+        />
+      </Modal>
     </div>
   );
 }
